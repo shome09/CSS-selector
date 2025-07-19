@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .header {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .selector-output {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .selector-text {
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            background: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            border-left: 4px solid #007acc;
+            word-break: break-all;
+            font-size: 14px;
+        }
+        .copy-btn {
+            background: #007acc;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .copy-btn:hover {
+            background: #005a99;
+        }
+        .instructions {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .element-info {
+            background: #e8f4f8;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            font-size: 12px;
+        }
+        .status {
+            color: #666;
+            font-style: italic;
+            margin-bottom: 15px;
+        }
+        .style-injector {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .style-input {
+            width: 100%;
+            min-height: 100px;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 10px;
+            font-size: 14px;
+            resize: vertical;
+        }
+        .style-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+        .style-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .style-btn:hover {
+            background: #218838;
+        }
+        .style-btn.remove {
+            background: #dc3545;
+        }
+        .style-btn.remove:hover {
+            background: #c82333;
+        }
+        .style-btn.preset {
+            background: #6f42c1;
+        }
+        .style-btn.preset:hover {
+            background: #5a32a3;
+        }
+        .preset-styles {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        .preset-btn {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            color: #495057;
+        }
+        .preset-btn:hover {
+            background: #e9ecef;
+        }
+        .applied-styles {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            border-radius: 4px;
+            padding: 10px;
+            margin-top: 10px;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 12px;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+        .applied-styles h4 {
+            margin: 0 0 10px 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-size: 14px;
+            color: #155724;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>CSS Selector Capture</h2>
+            <div class="status" id="status">Click on an element in the page to capture its CSS selector</div>
+        </div>
+        
+        <div class="selector-output" id="selectorOutput" style="display: none;">
+            <h3>Generated CSS Selector:</h3>
+            <div class="element-info" id="elementInfo"></div>
+            <div class="selector-text" id="selectorText"></div>
+            <button class="copy-btn" id="copyBtn">Copy Selector</button>
+        </div>
+        
+        <div class="style-injector" id="styleInjector" style="display: none;">
+            <h3>Inject Styles:</h3>
+            
+            <div class="preset-styles">
+                <button class="preset-btn" data-preset="highlight">Highlight</button>
+                <button class="preset-btn" data-preset="border">Red Border</button>
+                <button class="preset-btn" data-preset="shadow">Box Shadow</button>
+                <button class="preset-btn" data-preset="opacity">Semi-transparent</button>
+                <button class="preset-btn" data-preset="rotate">Rotate</button>
+                <button class="preset-btn" data-preset="scale">Scale Up</button>
+            </div>
+            
+            <textarea 
+                id="styleInput" 
+                class="style-input" 
+                placeholder="Enter CSS properties (one per line):
+background-color: yellow;
+border: 2px solid red;
+transform: scale(1.1);
+box-shadow: 0 0 10px rgba(0,0,0,0.5);"
+            ></textarea>
+            
+            <div class="style-buttons">
+                <button class="style-btn" id="applyStylesBtn">Apply Styles</button>
+                <button class="style-btn remove" id="removeStylesBtn">Remove All Styles</button>
+                <button class="style-btn preset" id="getComputedBtn">Get Computed Styles</button>
+            </div>
+            
+            <div class="applied-styles" id="appliedStyles" style="display: none;">
+                <h4>Currently Applied Styles:</h4>
+                <div id="appliedStylesContent"></div>
+            </div>
+        </div>
+        
+        <div class="instructions">
+            <h3>How to use:</h3>
+            <ol>
+                <li>Open the Elements panel in DevTools</li>
+                <li>Click on any element in the DOM tree or use the element picker</li>
+                <li>The CSS selector will appear automatically</li>
+                <li>Use the style injection panel to apply custom CSS</li>
+                <li>Try preset styles or write your own CSS properties</li>
+                <li>Click "Remove All Styles" to reset the element</li>
+            </ol>
+            
+            <h3>Style Injection Features:</h3>
+            <ul style="font-size: 13px; line-height: 1.4;">
+                <li><strong>Preset Styles:</strong> Quick buttons for common effects</li>
+                <li><strong>Custom CSS:</strong> Write any CSS properties</li>
+                <li><strong>Computed Styles:</strong> Load current element styles</li>
+                <li><strong>Style Tracking:</strong> See which styles are applied</li>
+            </ul>
+        </div>
+    </div>
+    
+    <script src="panel.js"></script>
+</body>
+</html>

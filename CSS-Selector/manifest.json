@@ -1,0 +1,27 @@
+{
+  "manifest_version": 3,
+  "name": "CSS Selector Capture",
+  "version": "1.0",
+  "description": "Capture CSS selectors of elements when using Chrome Inspector",
+  "permissions": [
+    "activeTab",
+    "scripting"
+  ],
+  "devtools_page": "devtools.html",
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "run_at": "document_end"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["selector-generator.js"],
+      "matches": ["<all_urls>"]
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html"
+  }
+}
